@@ -1,6 +1,6 @@
-name: CI 
+name: CI
 
-on:
+on: 
   # push:
   #   branches:
   #     - "main"
@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
     
   pull_request:
-    branches: [main]
+    branches: [ main ]
     paths: ['hangman-api/**']
 
 jobs:
@@ -17,26 +17,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: build
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'npm'
+          cache-dependency-path: hangman-api/package-lock.json
+      - name: build 
         working-directory: ./hangman-api
         run: |
           npm ci 
           npm run build --if-present
-      - uses: actions/upload-articfact@v3
-        with:
-          name: dependencies
-          paths: hangman-api/node_modules/
 
   test:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/download-articfact@v3
+      - uses: actions/checkout@v3 
+      - uses: actions/setup-node@v3
         with:
-          name: dependencies
-          paths: hangman-api/node_modules/
-      - name: test
-        working-directory: ./hangman-api
-        run: |
+          node-version: 16
+      - name: test 
+        working-directory: ./hangman-api 
+        run: | 
           npm test
