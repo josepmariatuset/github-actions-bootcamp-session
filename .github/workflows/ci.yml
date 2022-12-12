@@ -4,19 +4,41 @@ on:
   push:
     branches:
       - "main"
+    paths:
+      - "hangman-api/**"
   pull_request:
     branches: [main]
+    paths: ["hangman-api/**"]
 
 jobs:
-  audit:
+  # audit:
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: inspect
+  #       run: |
+  #         ls -al 
+  #         whoami
+  #         pwd
+  #         node -v
+  build-test:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        node-version: [14.x, 15.x, 16.x]
+
     steps:
-      - name: inspect
+      - uses: actions/checkout@v3
+      - name: Setup Node environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: build and build-test
+        working-directory: ./hangman-api
         run: |
-          ls -al 
-          whoami
-          pwd
-          node -v
-          
-          
+          npm ci 
+          npm run build --if-present
+          ls ./dist
+          npm test
