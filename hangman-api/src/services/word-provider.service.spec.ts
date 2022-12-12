@@ -23,6 +23,7 @@ describe('word-provider.srv', () => {
     setUp(categoryLength, wordCategories);
 
     // Act
+    // todo
     const selectedWord = selectWord();
     expect(selectedWord.categoryIndex).toBeLessThanOrEqual(categoryLength - 1);
     expect(selectedWord.wordIndex).toBeLessThanOrEqual(categories[selectedWord.categoryIndex].words.length - 1);
