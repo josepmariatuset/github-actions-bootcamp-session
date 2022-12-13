@@ -40,4 +40,9 @@ jobs:
           DOCKER_USER: "josepmariatuset"
           DOCKER_REPOSITORY: "hangman-api/dist/"
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: docker build . --file Dockerfile.workflow --tag my-image-name:$(date +%sS)
+        # run: docker build . --file Dockerfile.workflow --tag my-image-name:$(date +%sS)
+        run: |
+          echo $DOCKER_PASSWORD | docker login --username $DOCKER_USER --password-stdin
+          image=$DOCKER_USER/$DOCKER_REPOSITORY:$(date +%s)
+          docker build . --file Dockerfile.workflow --tag $image
+          docker push $image
